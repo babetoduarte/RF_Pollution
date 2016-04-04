@@ -10,4 +10,4 @@ The code is written using the Arduino C/C++ language, and implements the followi
 
 A custom RF sensing circuit will be built and its decoded sensing output will be connected to the NodeMCU's digital input pins. This way, for every measurement the Node will only have to probe its digital inputs, and report a predefined signal measurement to the MQTT broker according to which pin presents a signal:
 
-![NodeMCU Pinout Diagram](https://raw.githubusercontent.com/babetoduarte.github.com/RF_Pollution/master/img/NodeMCU_Pinout.png)
+![NodeMCU Pinout Diagram](https://github.com/babetoduarte/RF_Pollution/blob/master/img/NodeMCU_Pinout.png)
