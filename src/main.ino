@@ -6,6 +6,8 @@
 void setup_wifi();
 void callback(char* topic, byte* payload, unsigned int length);
 void reconnect();
+void sleep(int timeInSeconds);
+char* readPins();
 
 //Define AP SSID and Password
 const char* ssid = "J4D_RPi";
@@ -19,31 +21,52 @@ PubSubClient client(espClient);
 //Message attributes
 long lastMsg = 0;
 char msg[50];
-int value =0;
+int value = 0;
+char* lastReading = "";
+
+//RF Measurement attributes
+int val0=2;
+int val1=2;
+int val2=2;
+int val3=2;
 
 void setup(){
     pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-    Serial.begin(115200);
+
+    //Initialize the D0 - D4 as Inputs
+    pinMode(D1, OUTPUT);
+    pinMode(D2, OUTPUT);
+    pinMode(D3, OUTPUT);
+    pinMode(D4, OUTPUT);
+
+    Serial.begin(115200);   //Initialize serial console
+    delay(3000); // Wait for the serial console to start
     setup_wifi();
     client.setServer(server, 1883);
     client.setCallback(callback);
 }
 
 void loop(){
-    if (!client.connected()) {
-      reconnect();
-    }
-    client.loop();
+    // if (!client.connected()) {
+    //   reconnect();
+    // }
+    // client.loop();
+    //
+    // long now = millis();
+    // if (now - lastMsg > 2000) {
+    //   lastMsg = now;
+    //   ++value;
+    //   snprintf (msg, 75, "hello world #%ld", value);
+    //   Serial.print("Publish message: ");
+    //   Serial.println(msg);
+    //   client.publish("outTopic", msg);
+    // }
 
-    long now = millis();
-    if (now - lastMsg > 2000) {
-      lastMsg = now;
-      ++value;
-      snprintf (msg, 75, "hello world #%ld", value);
-      Serial.print("Publish message: ");
-      Serial.println(msg);
-      client.publish("outTopic", msg);
-    }
+    Serial.print("Reading RF Level:...");
+    lastReading = readPins();
+    Serial.println(lastReading);
+    sleep(3);   //Sleep 3 seconds
+
 }
 
 void setup_wifi(){
@@ -108,5 +131,57 @@ void reconnect(){
 }
 
 void sleep(int timeInSeconds){
-    ESP.deepSleep(timeInSeconds * 1000000);
+    //ESP.deepSleep(timeInSeconds * 1000000);
+    delay(timeInSeconds * 1000);
+}
+
+char* readPins(){
+    val0=digitalRead(D1);
+    val1=digitalRead(D2);
+    val2=digitalRead(D3);
+    val3=digitalRead(D4);
+    if(val0==LOW and val1==LOW and val2==LOW and val3==LOW){ //0000
+        //Serial.println("No Measurement");
+        return "No Measurement";
+    }
+    else if(val0==LOW and val1==LOW and val2==LOW and val3==HIGH){ //0001
+        //Serial.println("-70 dBm");
+        return "-70 dBm";
+    }
+    else if(val0==LOW and val1==LOW and val2==HIGH and val3==LOW){ //0010
+        //Serial.println("-60 dBm");
+        return "-60 dBm";
+    }
+    else if(val0==LOW and val1==LOW and val2==HIGH and val3==HIGH){ //0011
+        //Serial.println("-50 dBm");
+        return "-50 dBm";
+    }
+    else if(val0==LOW and val1==HIGH and val2==LOW and val3==LOW){ //0100
+        //Serial.println("-40 dBm");
+        return "-40 dBm";
+    }
+    else if(val0==LOW and val1==HIGH and val2==LOW and val3==HIGH){ //0101
+        //Serial.println("-30 dBm");
+        return "-30 dBm";
+    }
+    else if(val0==LOW and val1==HIGH and val2==HIGH and val3==LOW){ //0110
+        //Serial.println("-20 dBm");
+        return "-20 dBm";
+    }
+    else if(val0==LOW and val1==HIGH and val2==HIGH and val3==HIGH){ //0111
+        //Serial.println("-10 dBm");
+        return "-10 dBm";
+    }
+    else if(val0==HIGH and val1==LOW and val2==LOW and val3==LOW){ //1000
+        //Serial.println(" 0 dBm");
+        return " 0 dBm";
+    }
+    else if(val0==HIGH and val1==LOW and val2==LOW and val3==HIGH){ //1001
+        //Serial.println("+10 dBm");
+        return "+10 dBm";
+    }
+    else{
+        //Serial.println("Measurement Error");
+        return "Measurement Error";
+    }
 }
