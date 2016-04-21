@@ -33,7 +33,7 @@ int val3=2;
 void setup(){
     pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
 
-    //Initialize the D0 - D4 as Inputs
+    //Initialize the D1 - D4 as Inputs
     pinMode(D1, OUTPUT);
     pinMode(D2, OUTPUT);
     pinMode(D3, OUTPUT);
