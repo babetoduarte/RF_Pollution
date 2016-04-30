@@ -62,12 +62,12 @@ void loop(){
       Serial.println(lastReading);
       //client.publish("outTopic", msg);
       client.publish("RFMeasurements", lastReading);
+      sleep(3);   //Sleep 3 seconds
     }
 
     Serial.print("Reading RF Level:...");
     lastReading = readPins();
     Serial.println(lastReading);
-    sleep(3);   //Sleep 3 seconds
 
 }
 
@@ -148,39 +148,39 @@ char* readPins(){
     }
     else if(val0==LOW and val1==LOW and val2==LOW and val3==HIGH){ //0001
         //Serial.println("-70 dBm");
-        return "-70 dBm";
+        return "-70";
     }
     else if(val0==LOW and val1==LOW and val2==HIGH and val3==LOW){ //0010
         //Serial.println("-60 dBm");
-        return "-60 dBm";
+        return "-60";
     }
     else if(val0==LOW and val1==LOW and val2==HIGH and val3==HIGH){ //0011
         //Serial.println("-50 dBm");
-        return "-50 dBm";
+        return "-50";
     }
     else if(val0==LOW and val1==HIGH and val2==LOW and val3==LOW){ //0100
         //Serial.println("-40 dBm");
-        return "-40 dBm";
+        return "-40";
     }
     else if(val0==LOW and val1==HIGH and val2==LOW and val3==HIGH){ //0101
         //Serial.println("-30 dBm");
-        return "-30 dBm";
+        return "-30";
     }
     else if(val0==LOW and val1==HIGH and val2==HIGH and val3==LOW){ //0110
         //Serial.println("-20 dBm");
-        return "-20 dBm";
+        return "-20";
     }
     else if(val0==LOW and val1==HIGH and val2==HIGH and val3==HIGH){ //0111
         //Serial.println("-10 dBm");
-        return "-10 dBm";
+        return "-10";
     }
     else if(val0==HIGH and val1==LOW and val2==LOW and val3==LOW){ //1000
         //Serial.println(" 0 dBm");
-        return " 0 dBm";
+        return "0";
     }
     else if(val0==HIGH and val1==LOW and val2==LOW and val3==HIGH){ //1001
         //Serial.println("+10 dBm");
-        return "+10 dBm";
+        return "10";
     }
     else{
         //Serial.println("Measurement Error");
